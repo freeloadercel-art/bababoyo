@@ -92,15 +92,18 @@
         .map-header h4 { font-size: 1.2rem; font-weight: 600; }
         .map-header p { font-size: 0.85rem; opacity: 0.8; }
         .map-container {
-            height: 400px;
+            height: 300px;
             width: 100%;
             background: #e2e8f0;
             position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
         }
-        .map-container iframe, .map-container img {
+        .map-container img {
             width: 100%;
             height: 100%;
-            border: 0;
             object-fit: cover;
         }
         .map-note {
@@ -169,19 +172,17 @@
         .footer a { color: #ffd700; text-decoration: none; }
 
         /* Spin wheel styles */
-        .wheel-container {
+        .wheel-section {
             display: flex;
             flex-wrap: wrap;
             gap: 2rem;
             align-items: center;
             justify-content: center;
-            margin: 2rem 0;
         }
         .wheel-canvas {
             position: relative;
             width: 300px;
             height: 300px;
-            margin: 0 auto;
         }
         canvas#wheelCanvas {
             width: 100%;
@@ -190,8 +191,21 @@
             box-shadow: 0 10px 20px rgba(0,0,0,0.2);
             transition: transform 0.2s;
         }
+        .wheel-pointer {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
+            border-top: 30px solid #b22222;
+            z-index: 10;
+        }
         .wheel-controls {
             text-align: center;
+            margin-top: 1rem;
         }
         .spin-btn {
             background: #b22222;
@@ -202,7 +216,6 @@
             border-radius: 50px;
             cursor: pointer;
             font-weight: bold;
-            margin-top: 1rem;
             transition: 0.2s;
         }
         .spin-btn:hover { background: #8b1a1a; transform: scale(1.02); }
@@ -211,17 +224,16 @@
             border-left: 6px solid #b22222;
             padding: 1.5rem;
             border-radius: 16px;
-            max-width: 400px;
-            min-width: 260px;
             flex: 1;
+            min-width: 260px;
         }
-        .fact-display h3 { margin-top: 0; color: #b22222; }
+        .fact-display h3 { margin-top: 0; color: #b22222; display: flex; align-items: center; gap: 0.5rem; }
         .fact-text { font-size: 1.1rem; font-weight: 500; margin-top: 0.5rem; }
 
         @media (max-width: 768px) {
             .map-grid { grid-template-columns: 1fr; }
             .header h1 { font-size: 2rem; }
-            .wheel-container { flex-direction: column; }
+            .wheel-section { flex-direction: column; }
         }
     </style>
 </head>
@@ -233,10 +245,9 @@
     </header>
 
     <main class="container">
-        <!-- Introduction with hypotheses -->
+        <!-- Hypotheses -->
         <section class="section">
             <h2 class="section-title">Spatial Hypotheses</h2>
-            <p style="margin-bottom:1.5rem; font-size:1.1rem;">This project uses geographic information systems to test whether the Holodomor was a deliberate, ethnically targeted genocide. The following four hypotheses are examined through interactive maps and statistical analysis.</p>
             <div class="hypothesis-grid">
                 <div class="hypothesis-card"><h3><i class="fas fa-tractor"></i> H1: Agricultural Targeting</h3><p>Mortality highest in black‑soil regions (Poltava, Cherkasy) where grain quotas were extreme.</p></div>
                 <div class="hypothesis-card"><h3><i class="fas fa-users"></i> H2: Ethnic Targeting</h3><p>Areas with higher ethnic Ukrainian population suffered greater losses, even controlling for agriculture.</p></div>
@@ -245,7 +256,7 @@
             </div>
         </section>
 
-        <!-- Key stats -->
+        <!-- Key Stats -->
         <section class="section">
             <h2 class="section-title">Key Statistics</h2>
             <div class="stats-row">
@@ -256,61 +267,55 @@
             </div>
         </section>
 
-        <!-- Interactive Maps (fixed) -->
+        <!-- Interactive Maps (static images with links) -->
         <section class="section">
             <h2 class="section-title">Spatial Evidence Maps</h2>
-            <p style="margin-bottom:1.5rem;">Explore these maps. If any embed fails, a fallback image with a direct link is shown.</p>
+            <p style="margin-bottom:1.5rem;">Click on any map image to open the full interactive version from the authoritative source.</p>
             <div class="map-grid">
-                <!-- Map 1: Mortality (Harvard MAPA embed) -->
+                <!-- Map 1: Mortality -->
                 <div class="map-item">
                     <div class="map-header"><h4>Excess Deaths by Raion (1932–1934)</h4><p>Source: Harvard MAPA Project</p></div>
-                    <div class="map-container" id="map1-container">
-                        <iframe src="https://storymaps.arcgis.com/stories/0c1b8a2c3d4e5f6a7b8c9d0e1f2a3b4c" title="Mortality map" allowfullscreen></iframe>
+                    <div class="map-container">
+                        <a href="https://gis.huri.harvard.edu/population-losses" target="_blank">
+                            <img src="https://gis.huri.harvard.edu/sites/default/files/styles/large/public/maps/population_losses_thumb.png" alt="Mortality map preview" onerror="this.src='https://via.placeholder.com/500x300?text=Harvard+MAPA+Map+Preview'">
+                        </a>
                     </div>
-                    <div class="map-note"><strong>Analysis:</strong> Dark red areas (Poltava, Cherkasy) show >50% rural losses. Correlates with black soil belt. <a href="https://gis.huri.harvard.edu/population-losses" target="_blank">View live at Harvard MAPA →</a></div>
+                    <div class="map-note"><strong>Analysis:</strong> Dark red areas (Poltava, Cherkasy) show >50% rural losses. <a href="https://gis.huri.harvard.edu/population-losses" target="_blank">Open interactive map →</a></div>
                 </div>
-                <!-- Map 2: Grain Quotas (declassified data via HREC) -->
+                <!-- Map 2: Grain Quotas -->
                 <div class="map-item">
-                    <div class="map-header"><h4>Grain Requisition Targets (1932)</h4><p>Source: Declassified Soviet records / HREC</p></div>
-                    <div class="map-container" id="map2-container">
-                        <iframe src="https://www.arcgis.com/apps/View/index.html?appid=4e2d9f6c7b8a9d0e1f2a3b4c5d6e7f8g" title="Grain quotas map" allowfullscreen></iframe>
+                    <div class="map-header"><h4>Grain Requisition Targets (1932)</h4><p>Source: Holodomor Research and Education Consortium</p></div>
+                    <div class="map-container">
+                        <a href="https://holodomor.ca/resources/maps/" target="_blank">
+                            <img src="https://holodomor.ca/wp-content/uploads/2020/04/map-cropped.png" alt="Grain quotas map preview" onerror="this.src='https://via.placeholder.com/500x300?text=HREC+Map+Preview'">
+                        </a>
                     </div>
-                    <div class="map-note"><strong>Analysis:</strong> Quota size strongly correlates with mortality (r²=0.78). <a href="https://holodomor.ca/resources/maps/" target="_blank">Explore more at HREC →</a></div>
+                    <div class="map-note"><strong>Analysis:</strong> Quota size strongly correlates with mortality (r²=0.78). <a href="https://holodomor.ca/resources/maps/" target="_blank">Explore at HREC →</a></div>
                 </div>
-                <!-- Map 3: Blacklisted Villages (Holodomor Museum) -->
+                <!-- Map 3: Blacklisted Villages -->
                 <div class="map-item">
-                    <div class="map-header"><h4>"Black List" Villages (Чорні дошки)</h4><p>Source: Central State Archive of Ukraine</p></div>
-                    <div class="map-container" id="map3-container">
-                        <iframe src="https://www.arcgis.com/apps/View/index.html?appid=5f8g7h6i5j4k3l2m1n0o9p8q7r6s5t4u" title="Blacklist map" allowfullscreen></iframe>
+                    <div class="map-header"><h4>"Black List" Villages (Чорні дошки)</h4><p>Source: Holodomor Museum</p></div>
+                    <div class="map-container">
+                        <a href="https://memorialholodomor.org.ua/en/map" target="_blank">
+                            <img src="https://memorialholodomor.org.ua/sites/default/files/styles/large/public/map-thumb.jpg" alt="Blacklist map preview" onerror="this.src='https://via.placeholder.com/500x300?text=Holodomor+Museum+Map'">
+                        </a>
                     </div>
-                    <div class="map-note"><strong>Analysis:</strong> Blacklisted villages cluster in ethnic Ukrainian agricultural regions. <a href="https://memorialholodomor.org.ua/en/map" target="_blank">View official memorial map →</a></div>
+                    <div class="map-note"><strong>Analysis:</strong> Blacklisted villages cluster in ethnic Ukrainian agricultural regions. <a href="https://memorialholodomor.org.ua/en/map" target="_blank">Open interactive map →</a></div>
                 </div>
-                <!-- Map 4: Oral Histories (Harvard oral history geodatabase) -->
+                <!-- Map 4: Oral Histories -->
                 <div class="map-item">
-                    <div class="map-header"><h4>Survivor Testimonies by Village</h4><p>Source: Harvard Ukrainian Research Institute (126 interviews)</p></div>
-                    <div class="map-container" id="map4-container">
-                        <iframe src="https://www.arcgis.com/apps/View/index.html?appid=6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v" title="Oral histories map" allowfullscreen></iframe>
+                    <div class="map-header"><h4>Survivor Testimonies by Village</h4><p>Source: Harvard Ukrainian Research Institute</p></div>
+                    <div class="map-container">
+                        <a href="https://gis.huri.harvard.edu/oral-history" target="_blank">
+                            <img src="https://gis.huri.harvard.edu/sites/default/files/styles/large/public/maps/oral_history_thumb.png" alt="Oral history map preview" onerror="this.src='https://via.placeholder.com/500x300?text=Harvard+Oral+History+Map'">
+                        </a>
                     </div>
                     <div class="map-note"><strong>Analysis:</strong> Testimonies of cannibalism, deportation cluster in highest mortality zones. <a href="https://gis.huri.harvard.edu/oral-history" target="_blank">Explore Harvard oral history map →</a></div>
                 </div>
             </div>
-            <script>
-                // Fallback: if iframe fails to load, replace with an image and a link
-                const iframes = document.querySelectorAll('.map-container iframe');
-                iframes.forEach(iframe => {
-                    iframe.onerror = function() {
-                        const container = this.parentElement;
-                        const altDiv = document.createElement('div');
-                        altDiv.style.cssText = 'display:flex; align-items:center; justify-content:center; height:100%; background:#e9ecef; flex-direction:column; text-align:center; padding:1rem;';
-                        altDiv.innerHTML = '<p><i class="fas fa-map-marked-alt" style="font-size:2rem; color:#b22222;"></i></p><p>Map temporarily unavailable.<br>Click the link in the analysis note to view the original map.</p>';
-                        this.style.display = 'none';
-                        container.appendChild(altDiv);
-                    };
-                });
-            </script>
         </section>
 
-        <!-- Mortality table + chart -->
+        <!-- Mortality Table & Chart -->
         <section class="section">
             <h2 class="section-title">Urban Mortality Rates</h2>
             <div style="display: flex; flex-wrap: wrap; gap: 2rem;">
@@ -330,7 +335,7 @@
             </div>
         </section>
 
-        <!-- Statistical correlation chart -->
+        <!-- Statistical Evidence -->
         <section class="section">
             <h2 class="section-title">Statistical Evidence of Deliberate Targeting</h2>
             <div class="chart-row">
@@ -345,23 +350,23 @@
             </div>
         </section>
 
-        <!-- Spin wheel section -->
+        <!-- Spin Wheel (improved) -->
         <section class="section">
-            <h2 class="section-title"><i class="fas fa-cog"></i> Wheel of Hidden Facts</h2>
-            <p style="margin-bottom:1rem;">Spin the wheel to uncover lesser‑known facts about the Holodomor.</p>
-            <div class="wheel-container">
+            <h2 class="section-title"><i class="fas fa-cog"></i> Spin to Discover Hidden Facts</h2>
+            <div class="wheel-section">
                 <div class="wheel-canvas">
+                    <div class="wheel-pointer"></div>
                     <canvas id="wheelCanvas" width="500" height="500"></canvas>
                 </div>
                 <div class="fact-display">
-                    <h3>📖 Did you know?</h3>
+                    <h3><i class="fas fa-lightbulb"></i> Did you know?</h3>
                     <div id="factDisplay" class="fact-text">Spin the wheel to reveal a fact.</div>
-                    <button id="spinWheelBtn" class="spin-btn"><i class="fas fa-sync-alt"></i> SPIN</button>
+                    <button id="spinWheelBtn" class="spin-btn" style="margin-top: 1rem;"><i class="fas fa-sync-alt"></i> SPIN</button>
                 </div>
             </div>
         </section>
 
-        <!-- Timeline Slider -->
+        <!-- Timeline -->
         <section class="section">
             <h2 class="section-title">Temporal‑Spatial Progression: 1931–1934</h2>
             <div class="timeline-container">
@@ -394,8 +399,7 @@
     </footer>
 
     <script>
-        // ---- Charts ----
-        // Bar chart
+        // Charts
         const ctxBar = document.getElementById('mortalityChart').getContext('2d');
         new Chart(ctxBar, {
             type: 'bar',
@@ -403,7 +407,6 @@
                     datasets: [{ label: 'Mortality (%)', data: [50,45,40,40,35,30,12], backgroundColor: '#b22222', borderRadius: 8 }] },
             options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, max: 60 } } }
         });
-        // Scatter plot
         const ctxScatter = document.getElementById('scatterChart').getContext('2d');
         new Chart(ctxScatter, {
             type: 'scatter',
@@ -411,7 +414,7 @@
             options: { responsive: true, maintainAspectRatio: false, scales: { x: { title: { display: true, text: 'Grain quota index' } }, y: { title: { display: true, text: 'Mortality (%)' }, beginAtZero: true } } }
         });
 
-        // ---- Timeline slider ----
+        // Timeline
         const slider = document.getElementById('timeline-slider');
         const yearDisplay = document.getElementById('timeline-year');
         const desc = document.getElementById('timeline-description');
@@ -429,9 +432,9 @@
             else desc.innerText = "Famine subsides, but millions dead; Soviet propaganda denies everything.";
         });
 
-        // ---- Spin Wheel ----
+        // Spin Wheel
         const wheelCanvas = document.getElementById('wheelCanvas');
-        const ctx = wheelCanvas.getContext('2d');
+        const ctxWheel = wheelCanvas.getContext('2d');
         const spinBtn = document.getElementById('spinWheelBtn');
         const factDisplay = document.getElementById('factDisplay');
 
@@ -457,53 +460,45 @@
             const size = wheelCanvas.width;
             const center = size / 2;
             const radius = size / 2;
-            ctx.clearRect(0, 0, size, size);
+            ctxWheel.clearRect(0, 0, size, size);
             for (let i = 0; i < segments; i++) {
                 const startAngle = i * angleStep + currentRotation;
                 const endAngle = startAngle + angleStep;
-                ctx.beginPath();
-                ctx.moveTo(center, center);
-                ctx.arc(center, center, radius, startAngle, endAngle);
-                ctx.fillStyle = `hsl(${i * 45}, 70%, 55%)`;
-                ctx.fill();
-                ctx.save();
-                ctx.translate(center, center);
-                ctx.rotate(startAngle + angleStep / 2);
-                ctx.textAlign = "center";
-                ctx.textBaseline = "middle";
-                ctx.fillStyle = "white";
-                ctx.font = "bold 14px 'Inter'";
-                const text = (i+1).toString();
-                ctx.fillText(text, radius * 0.7, 0);
-                ctx.restore();
-                ctx.strokeStyle = "#fff";
-                ctx.lineWidth = 2;
-                ctx.beginPath();
-                ctx.moveTo(center, center);
-                ctx.arc(center, center, radius, startAngle, endAngle);
-                ctx.stroke();
+                ctxWheel.beginPath();
+                ctxWheel.moveTo(center, center);
+                ctxWheel.arc(center, center, radius, startAngle, endAngle);
+                ctxWheel.fillStyle = `hsl(${i * 45}, 70%, 55%)`;
+                ctxWheel.fill();
+                ctxWheel.save();
+                ctxWheel.translate(center, center);
+                ctxWheel.rotate(startAngle + angleStep / 2);
+                ctxWheel.textAlign = "center";
+                ctxWheel.textBaseline = "middle";
+                ctxWheel.fillStyle = "white";
+                ctxWheel.font = "bold 16px 'Inter'";
+                ctxWheel.fillText((i+1).toString(), radius * 0.7, 0);
+                ctxWheel.restore();
+                ctxWheel.strokeStyle = "#fff";
+                ctxWheel.lineWidth = 2;
+                ctxWheel.beginPath();
+                ctxWheel.moveTo(center, center);
+                ctxWheel.arc(center, center, radius, startAngle, endAngle);
+                ctxWheel.stroke();
             }
-            // Draw center circle and pointer
-            ctx.beginPath();
-            ctx.arc(center, center, 20, 0, 2 * Math.PI);
-            ctx.fillStyle = "#fff";
-            ctx.fill();
-            ctx.strokeStyle = "#b22222";
-            ctx.lineWidth = 3;
-            ctx.stroke();
-            // Pointer triangle at top
-            ctx.beginPath();
-            ctx.moveTo(center - 12, 10);
-            ctx.lineTo(center, 0);
-            ctx.lineTo(center + 12, 10);
-            ctx.fillStyle = "#b22222";
-            ctx.fill();
+            // Draw center circle
+            ctxWheel.beginPath();
+            ctxWheel.arc(center, center, 20, 0, 2 * Math.PI);
+            ctxWheel.fillStyle = "#fff";
+            ctxWheel.fill();
+            ctxWheel.strokeStyle = "#b22222";
+            ctxWheel.lineWidth = 3;
+            ctxWheel.stroke();
         }
 
         function spinWheel() {
             if (spinning) return;
             spinning = true;
-            const spinAngle = Math.random() * 360 + 720; // at least 2 full rotations
+            const spinAngle = Math.random() * 360 + 720;
             const targetRot = currentRotation + spinAngle * Math.PI / 180;
             const start = performance.now();
             const duration = 2000;
@@ -519,7 +514,7 @@
                     requestAnimationFrame(animate);
                 } else {
                     // Determine winning segment
-                    const pointerAngle = Math.PI * 1.5; // pointing up (3 o'clock is 0, but pointer at top)
+                    const pointerAngle = -Math.PI / 2; // pointer points up (top)
                     let rawAngle = (pointerAngle - currentRotation + 2 * Math.PI) % (2 * Math.PI);
                     let segmentIndex = Math.floor(rawAngle / angleStep) % segments;
                     factDisplay.innerHTML = `<i class="fas fa-lightbulb"></i> ${facts[segmentIndex]}`;
