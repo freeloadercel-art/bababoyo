@@ -1,284 +1,32 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Holodomor: Spatial Analysis</title>
-<!-- Fonts & icons -->
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-<!-- Leaflet for maps -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
-<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-<!-- Chart.js -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-<!-- noUiSlider -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.css" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.js"></script>
-<style>
-*{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'Inter',sans-serif;background:#f4f7fb;color:#1e293b;line-height:1.6;}
-.header{background:linear-gradient(135deg,#0b1e33 0%,#1a2e44 100%);color:white;padding:2.5rem 2rem;text-align:center;border-bottom:5px solid #b22222;}
-.header h1{font-size:3rem;font-weight:700;margin-bottom:.5rem;}
-.header .sub{font-size:1.3rem;font-weight:300;opacity:.9;max-width:800px;margin:0 auto;}
-.header .badge{display:inline-block;background:#b22222;padding:.4rem 1.5rem;border-radius:50px;font-weight:600;margin-top:1rem;text-transform:uppercase;font-size:.9rem;}
-.container{max-width:1400px;margin:2rem auto;padding:0 2rem;}
-.section{background:white;border-radius:20px;padding:2rem;margin-bottom:2.5rem;box-shadow:0 8px 20px rgba(0,0,0,0.03);border:1px solid rgba(0,0,0,.05);}
-.section-title{font-size:2rem;font-weight:600;color:#0b1e33;margin-bottom:1.5rem;border-left:6px solid #b22222;padding-left:1rem;}
-.map-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(500px,1fr));gap:2rem;margin:2rem 0;}
-.map-item{background:#f1f5f9;border-radius:16px;overflow:hidden;box-shadow:0 5px 15px rgba(0,0,0,.05);}
-.map-header{background:#1e293b;color:white;padding:1rem 1.5rem;}
-.map-header h4{font-size:1.2rem;font-weight:600;}
-.map-container{height:400px;width:100%;background:#e2e8f0;position:relative;}
-.map-note{padding:1rem 1.5rem;background:#f8fafc;font-size:.9rem;border-top:1px solid #cbd5e1;}
-.map-note strong{color:#b22222;}
-.stats-row{display:flex;flex-wrap:wrap;gap:2rem;margin:2rem 0;}
-.stat-card{flex:1 1 200px;background:#f1f5f9;border-radius:16px;padding:1.5rem;text-align:center;}
-.stat-number{font-size:2.5rem;font-weight:700;color:#b22222;}
-.stat-label{color:#475569;font-weight:500;margin:.5rem 0 .2rem;}
-.stat-source{font-size:.75rem;color:#64748b;}
-.chart-container{background:white;border-radius:16px;padding:1.5rem;margin:2rem 0;border:1px solid #e2e8f0;}
-.chart-row{display:flex;flex-wrap:wrap;gap:2rem;}
-.chart-box{flex:1 1 400px;height:300px;}
-.timeline-container{background:#f1f5f9;border-radius:16px;padding:2rem;margin:2rem 0;}
-#timeline-slider{margin:1.5rem 0;}
-.timeline-labels{display:flex;justify-content:space-between;color:#475569;font-weight:500;}
-#timeline-year{font-size:2rem;font-weight:700;color:#b22222;text-align:center;}
-.wheel-container{display:flex;flex-wrap:wrap;gap:2rem;align-items:center;justify-content:flex-end;margin:2rem 0;}
-.wheel-canvas{position:relative;width:300px;height:300px;margin:0 auto;}
-canvas#wheelCanvas{width:100%;height:100%;border-radius:50%;box-shadow:0 10px 20px rgba(0,0,0,.2);transition:transform .2s;}
-.wheel-controls{text-align:center;}
-.spin-btn{background:#b22222;color:white;border:none;padding:12px 30px;font-size:1.2rem;border-radius:50px;cursor:pointer;font-weight:bold;margin-top:1rem;transition:.2s;}
-.spin-btn:hover{background:#8b1a1a;transform:scale(1.02);}
-.fact-display{background:#f8fafc;border-left:6px solid #b22222;padding:1.5rem;border-radius:16px;max-width:400px;min-width:260px;flex:1;}
-.fact-display h3{margin-top:0;color:#b22222;}
-.fact-text{font-size:1.1rem;font-weight:500;margin-top:.5rem;}
-.image-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem;margin:2rem 0;}
-.image-grid img{width:100%;border-radius:12px;}
-@media(max-width:768px){.map-grid{grid-template-columns:1fr;}.header h1{font-size:2rem;}.wheel-container{flex-direction:column;}}
-</style>
-</head>
-<body>
+<section id="intro" style="position:relative;overflow:hidden;height:100vh;color:white;">
+  <!-- 3D Movable Background -->
+  <div id="bg-layer" style="
+      position:absolute;
+      top:0; left:0;
+      width:120%; height:120%;
+      background-image:url('https://upload.wikimedia.org/wikipedia/commons/4/47/Space_Nebula.jpg');
+      background-size:cover;
+      background-position:center;
+      transform:translate3d(0,0,0);
+      transition:transform 0.1s;
+      z-index:0;
+  "></div>
 
-<header class="header">
-<h1>HOLODOMOR</h1>
-<div class="sub">Spatial Analysis of Stalin’s Famine-Genocide in Ukraine, 1932–1934</div>
-<div class="badge">INTERACTIVE PROJECT</div>
-</header>
-
-<main class="container">
-
-<!-- Introduction -->
-<section class="section">
-<h2 class="section-title">Introduction & Approach</h2>
-<p>This project presents a spatial analysis of the Holodomor, using interactive maps, charts, and visualizations to examine how famine and mortality patterns varied across Ukraine from 1931–1934.  
-The aim is to show patterns of mortality, grain requisitions, blacklists, and survivor testimonies in a way similar to a scientific study: hypotheses are stated, visual evidence is presented, and analysis is provided for each dataset.</p>
+  <!-- Content -->
+  <div style="position:relative;z-index:1;max-width:1000px;margin:0 auto;padding:4rem;">
+    <h1 style="font-size:3rem;font-weight:700;margin-bottom:1rem;">The Holodomor: A Spatial Analysis</h1>
+    <p style="font-size:1.2rem;line-height:1.8;">
+      The <strong>Holodomor</strong> (from Ukrainian <em>moryty holodom</em> – "to kill by starvation") was a man-made famine that killed an estimated <strong>3.9 million Ukrainians</strong> in 1932–1933...
+    </p>
+    <!-- More text here -->
+  </div>
 </section>
-
-<!-- Key Statistics -->
-<section class="section">
-<h2 class="section-title">Key Statistics</h2>
-<div class="stats-row">
-<div class="stat-card"><div class="stat-number">3.9M</div><div class="stat-label">Excess Deaths</div><div class="stat-source">Wolowyna et al., 2016</div></div>
-<div class="stat-card"><div class="stat-number">50%+</div><div class="stat-label">Rural Losses (Poltava)</div><div class="stat-source">HURI MAPA</div></div>
-<div class="stat-card"><div class="stat-number">12%</div><div class="stat-label">Donbas Mortality</div><div class="stat-source">UNIAN 2015</div></div>
-<div class="stat-card"><div class="stat-number">30+</div><div class="stat-label">Countries Recognizing Genocide</div><div class="stat-source">HREC</div></div>
-</div>
-</section>
-
-<!-- Images -->
-<section class="section">
-<h2 class="section-title">Historical Images</h2>
-<div class="image-grid">
-<img src="https://via.placeholder.com/400x250?text=Holodomor+1" alt="Holodomor 1">
-<img src="https://via.placeholder.com/400x250?text=Holodomor+2" alt="Holodomor 2">
-<img src="https://via.placeholder.com/400x250?text=Holodomor+3" alt="Holodomor 3">
-<img src="https://via.placeholder.com/400x250?text=Holodomor+4" alt="Holodomor 4">
-<img src="https://via.placeholder.com/400x250?text=Holodomor+5" alt="Holodomor 5">
-</div>
-</section>
-
-<!-- Maps -->
-<section class="section">
-<h2 class="section-title">Spatial Evidence Maps</h2>
-<p>Click on map areas for detailed analysis.</p>
-<div class="map-grid">
-
-<div class="map-item">
-<div class="map-header"><h4>Excess Mortality by Raion</h4><p>Simulated data</p></div>
-<div class="map-container" id="map1"></div>
-<div class="map-note"><strong>Analysis:</strong> Darker regions indicate higher mortality. Mortality correlates with black soil regions and grain quotas.</div>
-</div>
-
-<div class="map-item">
-<div class="map-header"><h4>Grain Requisition Targets (1932)</h4><p>Simulated data</p></div>
-<div class="map-container" id="map2"></div>
-<div class="map-note"><strong>Analysis:</strong> Areas with higher quotas suffered more famine. Shows deliberate targeting of agricultural regions.</div>
-</div>
-
-<div class="map-item">
-<div class="map-header"><h4>Blacklisted Villages</h4><p>Simulated data</p></div>
-<div class="map-container" id="map3"></div>
-<div class="map-note"><strong>Analysis:</strong> Villages on Soviet "Black Lists" experienced severe food deprivation.</div>
-</div>
-
-<div class="map-item">
-<div class="map-header"><h4>Survivor Testimonies by Village</h4><p>Simulated data</p></div>
-<div class="map-container" id="map4"></div>
-<div class="map-note"><strong>Analysis:</strong> Testimonies cluster in high-mortality regions, indicating widespread famine experiences.</div>
-</div>
-
-<div class="map-item">
-<div class="map-header"><h4>Ethnic & Industrial Regions</h4><p>Simulated data</p></div>
-<div class="map-container" id="map5"></div>
-<div class="map-note"><strong>Analysis:</strong> Ethnic Ukrainian agricultural regions suffered more, while industrial regions had lower mortality due to state rations.</div>
-</div>
-
-</div>
-</section>
-
-<!-- Timeline -->
-<section class="section">
-<h2 class="section-title">Temporal-Spatial Progression (1931–1934)</h2>
-<div class="timeline-container">
-<div id="timeline-year">1932</div>
-<div id="timeline-slider"></div>
-<div class="timeline-labels"><span>1931</span><span>1932</span><span>1933</span><span>1934</span></div>
-<p id="timeline-description" style="margin-top:1rem;font-style:italic;text-align:center;">Famine begins in grain-producing regions; quotas increase.</p>
-</div>
-</section>
-
-<!-- Spin Wheel -->
-<section class="section">
-<h2 class="section-title"><i class="fas fa-cog"></i> Wheel of Hidden Facts</h2>
-<div class="wheel-container">
-<div class="fact-display">
-<h3>📖 Did you know?</h3>
-<div id="factDisplay" class="fact-text">Spin the wheel to reveal a fact.</div>
-<button id="spinWheelBtn" class="spin-btn"><i class="fas fa-sync-alt"></i> SPIN</button>
-</div>
-<div class="wheel-canvas">
-<canvas id="wheelCanvas" width="300" height="300"></canvas>
-</div>
-</div>
-</section>
-
-<!-- Charts -->
-<section class="section">
-<h2 class="section-title">Mortality Statistics</h2>
-<div class="chart-row">
-<div class="chart-box"><canvas id="mortalityChart"></canvas></div>
-<div class="chart-box"><canvas id="scatterChart"></canvas></div>
-</div>
-</section>
-
-</main>
-
-<footer class="footer" style="background:#0b1e33;color:white;text-align:center;padding:2rem;">
-<p>Holodomor Spatial Analysis Project | Created for Interactive Web</p>
-<p style="margin-top:.5rem;font-size:.8rem;">Data: Simulated for demonstration purposes</p>
-<p><a href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;" style="color:#ffd700;text-decoration:none;">↑ Back to top</a></p>
-</footer>
 
 <script>
-// ==== Leaflet Maps ====
-const maps = [];
-const mapData = [
-{el:'map1', color:'red', points:[[49,34,50],[49.5,33,45],[50,30,40]]},
-{el:'map2', color:'orange', points:[[49,34,45],[49.5,33,40],[50,30,35]]},
-{el:'map3', color:'black', points:[[49,34,50],[50,31,35],[48,32,30]]},
-{el:'map4', color:'purple', points:[[49,34,50],[49.5,33,45],[50,30,40]]},
-{el:'map5', color:'blue', points:[[49,34,45],[49.5,33,40],[50,30,35]]},
-];
-
-mapData.forEach(m=>{
-  const map = L.map(m.el).setView([49.5,32],6);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
-  m.points.forEach(p=>{
-    L.circle([p[0],p[1]],{color:m.color,radius:p[2]*1000}).addTo(map)
-    .bindPopup(`Value: ${p[2]}%`);
-  });
-  maps.push(map);
-});
-
-// ==== Timeline Slider ====
-const slider = document.getElementById('timeline-slider');
-const yearDisplay = document.getElementById('timeline-year');
-const desc = document.getElementById('timeline-description');
-noUiSlider.create(slider,{start:[1932],connect:[true,false],step:1,range:{min:1931,max:1934},format:{to:v=>Math.round(v),from:v=>Math.round(v)}});
-slider.noUiSlider.on('update',(values)=>{
-  const year=values[0]; yearDisplay.innerText=year;
-  if(year==1931) desc.innerText="Collectivization intensifies; grain quotas rise sharply.";
-  else if(year==1932) desc.innerText="Famine begins in grain regions; blacklists introduced.";
-  else if(year==1933) desc.innerText="Peak mortality; reports of cannibalism; foreign journalists expose famine.";
-  else desc.innerText="Famine subsides; millions dead; propaganda denies events.";
-});
-
-// ==== Spin Wheel ====
-const wheelCanvas=document.getElementById('wheelCanvas');
-const ctx=wheelCanvas.getContext('2d');
-const spinBtn=document.getElementById('spinWheelBtn');
-const factDisplay=document.getElementById('factDisplay');
-const facts=[
-"The word 'Holodomor' was not used publicly until the 1980s.",
-"Stalin sealed Ukraine's borders in Dec 1932 to prevent flight.",
-"Over 1 million children died.",
-"Some villages were erased from official maps.",
-"People ate tree bark, grass, cats, or worse.",
-"The 'Black Lists' cut villages off from food supplies.",
-"Foreign journalists risked their lives to report famine.",
-"Speaking Ukrainian could lead to arrest.",
-"Ukraine recognized Holodomor as genocide in 2006.",
-"The Soviet government exported grain while Ukrainians starved."
-];
-const segments=facts.length;
-const angleStep=(2*Math.PI)/segments;
-let currentRotation=0; let spinning=false;
-
-function drawWheel(){
-  const size=wheelCanvas.width; const center=size/2; const radius=size/2;
-  ctx.clearRect(0,0,size,size);
-  for(let i=0;i<segments;i++){
-    const start=i*angleStep+currentRotation;
-    const end=start+angleStep;
-    ctx.beginPath(); ctx.moveTo(center,center); ctx.arc(center,center,radius,start,end);
-    ctx.fillStyle=`hsl(${i*360/segments},70%,55%)`; ctx.fill();
-    ctx.save(); ctx.translate(center,center); ctx.rotate(start+angleStep/2);
-    ctx.textAlign="center"; ctx.textBaseline="middle"; ctx.fillStyle="white"; ctx.font="bold 14px 'Inter'";
-    ctx.fillText((i+1).toString(),radius*0.7,0); ctx.restore();
-    ctx.strokeStyle="#fff"; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(center,center); ctx.arc(center,center,radius,start,end); ctx.stroke();
-  }
-  ctx.beginPath(); ctx.arc(center,center,20,0,2*Math.PI); ctx.fillStyle="#fff"; ctx.fill();
-  ctx.strokeStyle="#b22222"; ctx.lineWidth=3; ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(center-12,10); ctx.lineTo(center,0); ctx.lineTo(center+12,10); ctx.fillStyle="#b22222"; ctx.fill();
-}
-function spinWheel(){ if(spinning) return; spinning=true;
-  const spinAngle=Math.random()*360+720; const start=currentRotation; const duration=2000;
-  const startTime=performance.now();
-  function animate(now){
-    const elapsed=now-startTime; const t=Math.min(1,elapsed/duration); const easeOut=1-Math.pow(1-t,3);
-    currentRotation=start+(spinAngle*Math.PI/180)*easeOut; drawWheel();
-    if(t<1) requestAnimationFrame(animate);
-    else{spinning=false; const segmentIndex=Math.floor((segments-(currentRotation/(2*Math.PI))%segments)%segments); factDisplay.innerText=facts[segmentIndex];}
-  } requestAnimationFrame(animate);
-}
-drawWheel(); spinBtn.addEventListener('click',spinWheel);
-
-// ==== Charts ====
-const mortalityChart=new Chart(document.getElementById('mortalityChart'),{
-  type:'bar',
-  data:{
-    labels:['Poltava','Kyiv','Donbas','Kharkiv','Odesa'],
-    datasets:[{label:'Excess Deaths (Thousands)',data:[1200,900,400,600,300],backgroundColor:'#b22222'}]
-  },
-  options:{responsive:true,plugins:{legend:{display:false}}}
-});
-const scatterChart=new Chart(document.getElementById('scatterChart'),{
-  type:'scatter',
-  data:{datasets:[{label:'Mortality vs Grain Quotas',data:[{x:120,y:50},{x:100,y:45},{x:80,y:40},{x:60,y:35},{x:40,y:30}],backgroundColor:'#b22222'}]},
-  options:{responsive:true,plugins:{legend:{display:false}},scales:{x:{title:{display:true,text:'Grain Quotas'}},y:{title:{display:true,text:'Mortality'}}}}
+const bg = document.getElementById('bg-layer');
+document.addEventListener('mousemove', e => {
+    const x = (e.clientX / window.innerWidth - 0.5) * 30; // horizontal movement
+    const y = (e.clientY / window.innerHeight - 0.5) * 30; // vertical movement
+    bg.style.transform = `translate3d(${x}px, ${y}px, 0) scale(1.05)`;
 });
 </script>
-
-</body>
-</html>
