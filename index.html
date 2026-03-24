@@ -92,19 +92,15 @@
         .map-header h4 { font-size: 1.2rem; font-weight: 600; }
         .map-header p { font-size: 0.85rem; opacity: 0.8; }
         .map-container {
-            height: 300px;
+            height: 450px;
             width: 100%;
             background: #e2e8f0;
             position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
         }
-        .map-container img {
+        .map-container iframe {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            border: 0;
         }
         .map-note {
             padding: 1rem 1.5rem;
@@ -170,6 +166,20 @@
             margin-top: 3rem;
         }
         .footer a { color: #ffd700; text-decoration: none; }
+        .video-wrapper {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            margin: 1.5rem 0;
+        }
+        .video-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
 
         /* Spin wheel styles */
         .wheel-section {
@@ -267,52 +277,53 @@
             </div>
         </section>
 
-        <!-- Interactive Maps (static images with links) -->
+        <!-- Interactive Maps (embedded from official sources) -->
         <section class="section">
             <h2 class="section-title">Spatial Evidence Maps</h2>
-            <p style="margin-bottom:1.5rem;">Click on any map image to open the full interactive version from the authoritative source.</p>
+            <p style="margin-bottom:1.5rem;">Interactive maps directly from the Harvard MAPA project, Holodomor Research and Education Consortium, and the Holodomor Museum. Click and explore.</p>
             <div class="map-grid">
-                <!-- Map 1: Mortality -->
+                <!-- Map 1: Mortality (Harvard MAPA) -->
                 <div class="map-item">
                     <div class="map-header"><h4>Excess Deaths by Raion (1932–1934)</h4><p>Source: Harvard MAPA Project</p></div>
                     <div class="map-container">
-                        <a href="https://gis.huri.harvard.edu/population-losses" target="_blank">
-                            <img src="https://gis.huri.harvard.edu/sites/default/files/styles/large/public/maps/population_losses_thumb.png" alt="Mortality map preview" onerror="this.src='https://via.placeholder.com/500x300?text=Harvard+MAPA+Map+Preview'">
-                        </a>
+                        <iframe src="https://gis.huri.harvard.edu/map/population-losses" title="Mortality map" allowfullscreen></iframe>
                     </div>
-                    <div class="map-note"><strong>Analysis:</strong> Dark red areas (Poltava, Cherkasy) show >50% rural losses. <a href="https://gis.huri.harvard.edu/population-losses" target="_blank">Open interactive map →</a></div>
+                    <div class="map-note"><strong>Analysis:</strong> Dark red areas (Poltava, Cherkasy) show >50% rural losses. <a href="https://gis.huri.harvard.edu/population-losses" target="_blank">Open full screen →</a></div>
                 </div>
-                <!-- Map 2: Grain Quotas -->
+                <!-- Map 2: Grain Quotas (HREC) -->
                 <div class="map-item">
                     <div class="map-header"><h4>Grain Requisition Targets (1932)</h4><p>Source: Holodomor Research and Education Consortium</p></div>
                     <div class="map-container">
-                        <a href="https://holodomor.ca/resources/maps/" target="_blank">
-                            <img src="https://holodomor.ca/wp-content/uploads/2020/04/map-cropped.png" alt="Grain quotas map preview" onerror="this.src='https://via.placeholder.com/500x300?text=HREC+Map+Preview'">
-                        </a>
+                        <iframe src="https://holodomor.ca/maps/grain-quotas/" title="Grain quotas map" allowfullscreen></iframe>
                     </div>
                     <div class="map-note"><strong>Analysis:</strong> Quota size strongly correlates with mortality (r²=0.78). <a href="https://holodomor.ca/resources/maps/" target="_blank">Explore at HREC →</a></div>
                 </div>
-                <!-- Map 3: Blacklisted Villages -->
+                <!-- Map 3: Blacklisted Villages (Holodomor Museum) -->
                 <div class="map-item">
                     <div class="map-header"><h4>"Black List" Villages (Чорні дошки)</h4><p>Source: Holodomor Museum</p></div>
                     <div class="map-container">
-                        <a href="https://memorialholodomor.org.ua/en/map" target="_blank">
-                            <img src="https://memorialholodomor.org.ua/sites/default/files/styles/large/public/map-thumb.jpg" alt="Blacklist map preview" onerror="this.src='https://via.placeholder.com/500x300?text=Holodomor+Museum+Map'">
-                        </a>
+                        <iframe src="https://memorialholodomor.org.ua/en/map" title="Blacklist map" allowfullscreen></iframe>
                     </div>
-                    <div class="map-note"><strong>Analysis:</strong> Blacklisted villages cluster in ethnic Ukrainian agricultural regions. <a href="https://memorialholodomor.org.ua/en/map" target="_blank">Open interactive map →</a></div>
+                    <div class="map-note"><strong>Analysis:</strong> Blacklisted villages cluster in ethnic Ukrainian agricultural regions. <a href="https://memorialholodomor.org.ua/en/map" target="_blank">Open full map →</a></div>
                 </div>
-                <!-- Map 4: Oral Histories -->
+                <!-- Map 4: Oral Histories (Harvard) -->
                 <div class="map-item">
                     <div class="map-header"><h4>Survivor Testimonies by Village</h4><p>Source: Harvard Ukrainian Research Institute</p></div>
                     <div class="map-container">
-                        <a href="https://gis.huri.harvard.edu/oral-history" target="_blank">
-                            <img src="https://gis.huri.harvard.edu/sites/default/files/styles/large/public/maps/oral_history_thumb.png" alt="Oral history map preview" onerror="this.src='https://via.placeholder.com/500x300?text=Harvard+Oral+History+Map'">
-                        </a>
+                        <iframe src="https://gis.huri.harvard.edu/map/oral-history" title="Oral history map" allowfullscreen></iframe>
                     </div>
-                    <div class="map-note"><strong>Analysis:</strong> Testimonies of cannibalism, deportation cluster in highest mortality zones. <a href="https://gis.huri.harvard.edu/oral-history" target="_blank">Explore Harvard oral history map →</a></div>
+                    <div class="map-note"><strong>Analysis:</strong> Testimonies of cannibalism, deportation cluster in highest mortality zones. <a href="https://gis.huri.harvard.edu/oral-history" target="_blank">Explore at Harvard →</a></div>
                 </div>
             </div>
+        </section>
+
+        <!-- YouTube Video -->
+        <section class="section">
+            <h2 class="section-title">Documentary & Testimonies</h2>
+            <div class="video-wrapper">
+                <iframe src="https://www.youtube.com/embed/4u2CZnT5Fhc?si=hlj2F9o7s_x9LJQg" title="Holodomor documentary" frameborder="0" allowfullscreen></iframe>
+            </div>
+            <p style="margin-top:1rem;">A powerful documentary by the Holodomor Museum. Click to watch survivor testimonies and historical analysis.</p>
         </section>
 
         <!-- Mortality Table & Chart -->
@@ -350,7 +361,7 @@
             </div>
         </section>
 
-        <!-- Spin Wheel (improved) -->
+        <!-- Spin Wheel -->
         <section class="section">
             <h2 class="section-title"><i class="fas fa-cog"></i> Spin to Discover Hidden Facts</h2>
             <div class="wheel-section">
@@ -485,7 +496,6 @@
                 ctxWheel.arc(center, center, radius, startAngle, endAngle);
                 ctxWheel.stroke();
             }
-            // Draw center circle
             ctxWheel.beginPath();
             ctxWheel.arc(center, center, 20, 0, 2 * Math.PI);
             ctxWheel.fillStyle = "#fff";
@@ -499,7 +509,6 @@
             if (spinning) return;
             spinning = true;
             const spinAngle = Math.random() * 360 + 720;
-            const targetRot = currentRotation + spinAngle * Math.PI / 180;
             const start = performance.now();
             const duration = 2000;
 
@@ -513,8 +522,7 @@
                 if (t < 1) {
                     requestAnimationFrame(animate);
                 } else {
-                    // Determine winning segment
-                    const pointerAngle = -Math.PI / 2; // pointer points up (top)
+                    const pointerAngle = -Math.PI / 2;
                     let rawAngle = (pointerAngle - currentRotation + 2 * Math.PI) % (2 * Math.PI);
                     let segmentIndex = Math.floor(rawAngle / angleStep) % segments;
                     factDisplay.innerHTML = `<i class="fas fa-lightbulb"></i> ${facts[segmentIndex]}`;
