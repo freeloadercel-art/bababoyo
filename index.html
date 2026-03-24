@@ -1,5 +1,4 @@
-
-   <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -21,26 +20,161 @@
             color: #1e293b;
             line-height: 1.6;
         }
-        .header {
-            background: linear-gradient(135deg, #0b1e33 0%, #1a2e44 100%);
-            color: white;
-            padding: 2.5rem 2rem;
+        /* New landing and intro styles */
+        .hero {
+            position: relative;
+            height: 100vh;
+            background: url('https://upload.wikimedia.org/wikipedia/commons/6/6b/Holodomor_1933_Children.jpg') center/cover no-repeat fixed;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             text-align: center;
-            border-bottom: 5px solid #b22222;
+            color: white;
         }
-        .header h1 { font-size: 3rem; font-weight: 700; margin-bottom: 0.5rem; }
-        .header .sub { font-size: 1.3rem; font-weight: 300; opacity: 0.9; max-width: 800px; margin: 0 auto; }
-        .header .badge {
-            display: inline-block;
-            background: #b22222;
-            padding: 0.4rem 1.5rem;
-            border-radius: 50px;
-            font-weight: 600;
-            margin-top: 1rem;
-            text-transform: uppercase;
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            z-index: 1;
+        }
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            padding: 2rem;
+        }
+        .hero h1 {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+        .hero p {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            font-weight: 300;
+        }
+        .scroll-indicator {
+            font-size: 2rem;
+            animation: bounce 2s infinite;
+            cursor: pointer;
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(10px); }
+        }
+        .intro-section {
+            background: white;
+            padding: 5rem 2rem;
+            text-align: center;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .intro-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: #0b1e33;
+        }
+        .intro-section p {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            color: #2d3748;
+        }
+        .transition-image {
+            position: relative;
+            height: 70vh;
+            background: url('https://gis.huri.harvard.edu/sites/default/files/styles/large/public/maps/population_losses_thumb.png') center/cover no-repeat fixed;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+        }
+        .transition-image::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+        }
+        .transition-text {
+            position: relative;
+            z-index: 2;
+            max-width: 700px;
+            padding: 2rem;
+            font-size: 1.8rem;
+            font-weight: 500;
+        }
+        /* Hover-expand image grid */
+        .image-grid {
+            padding: 5rem 2rem;
+            background: #f8fafc;
+            text-align: center;
+        }
+        .image-grid h2 {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            color: #0b1e33;
+        }
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .grid-item {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+        .grid-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.2);
+            z-index: 10;
+        }
+        .grid-item img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            display: block;
+            transition: 0.3s;
+        }
+        .grid-item p {
+            padding: 1rem;
             font-size: 0.9rem;
+            color: #475569;
+            margin: 0;
+            transition: 0.3s;
         }
-        .container { max-width: 1400px; margin: 2rem auto; padding: 0 2rem; }
+        .grid-caption {
+            font-weight: 600;
+            color: #b22222;
+            margin-top: 0.5rem;
+        }
+        .grid-detail {
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, opacity 0.3s ease;
+            background: #fef9e3;
+            padding: 0 1rem;
+        }
+        .grid-item:hover .grid-detail {
+            max-height: 150px;
+            opacity: 1;
+            padding: 1rem;
+        }
+        /* Original styles (unchanged) */
         .section {
             background: white;
             border-radius: 20px;
@@ -116,7 +250,6 @@
             border-top: 1px solid #cbd5e1;
         }
         .map-note strong { color: #b22222; }
-        /* Enhanced stats row */
         .stats-row {
             display: flex;
             flex-wrap: wrap;
@@ -152,7 +285,6 @@
             margin-bottom: 0.5rem;
             color: #b22222;
         }
-        /* Visual highlights cards */
         .highlights-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -199,6 +331,35 @@
             border-radius: 12px;
             padding: 1rem;
             border-left: 4px solid #b22222;
+        }
+        /* New temporal-spatial map */
+        .progression-map {
+            margin-top: 1rem;
+            background: #f1f5f9;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        .progression-map .map-header {
+            background: #1e293b;
+            color: white;
+            padding: 1rem 1.5rem;
+        }
+        .progression-map .map-header h4 { font-size: 1.2rem; font-weight: 600; }
+        .progression-map .map-container {
+            height: 400px;
+            width: 100%;
+            background: #e2e8f0;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .progression-map .map-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
         .data-table {
             width: 100%;
@@ -292,21 +453,85 @@
             margin-top: 1rem;
         }
         .spin-btn:hover { background: #8b1a1a; transform: scale(1.02); }
+        .container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
         @media (max-width: 768px) {
             .map-grid { grid-template-columns: 1fr; }
-            .header h1 { font-size: 2rem; }
+            .hero h1 { font-size: 2rem; }
             .wheel-section { flex-direction: column; }
         }
     </style>
 </head>
 <body>
-    <header class="header">
-        <h1>HOLODOMOR</h1>
-        <div class="sub">The Geography of Stalin's Famine-Genocide in Ukraine, 1932–1933</div>
-        <div class="badge">SPATIAL ANALYSIS FRAMEWORK</div>
-    </header>
+    <!-- LANDING SECTION -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Holodomor: A Spatial Analysis</h1>
+            <p>Understanding where and why the famine struck hardest</p>
+            <div class="scroll-indicator" onclick="document.getElementById('intro').scrollIntoView({behavior:'smooth'});">
+                ↓
+            </div>
+        </div>
+    </section>
 
-    <main class="container">
+    <!-- INTRO SECTION (WHITE) -->
+    <section id="intro" class="intro-section">
+        <h2>The Geography of Genocide</h2>
+        <p>The Holodomor (from Ukrainian <em>moryty holodom</em> – "to kill by starvation") was a man-made famine that killed an estimated <strong>3.9 million Ukrainians</strong> in 1932–1933. This was not a natural disaster. It was the direct result of Soviet policies under Joseph Stalin: forced collectivization of agriculture, ruthless grain seizures, the closure of Ukraine's borders, and the systematic suppression of Ukrainian identity.<br><br>Using Geographic Information Systems (GIS), researchers at the Harvard Ukrainian Research Institute have mapped population losses at the district level, revealing a clear pattern: the deadliest areas were the grain-producing regions of central, eastern, and southern Ukraine—the fertile black soil belt—where Soviet grain quotas were highest and enforcement most brutal. In contrast, northern forested regions (Polissia) experienced lower mortality because they were less integrated into the grain economy.</p>
+    </section>
+
+    <!-- TRANSITION IMAGE + TEXT -->
+    <section class="transition-image">
+        <div class="transition-text">
+            The famine did not affect all regions equally.<br>
+            Some areas were hit far harder than others.
+        </div>
+    </section>
+
+    <!-- HOVER-EXPAND IMAGE GRID -->
+    <section class="image-grid">
+        <h2>Visual Evidence</h2>
+        <div class="grid-container">
+            <div class="grid-item">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/Holodomor_1933_Children.jpg" alt="Starving children">
+                <p class="grid-caption">Starving children in a Ukrainian village, 1933</p>
+                <p>Source: Central State Archive of Ukraine</p>
+                <div class="grid-detail">
+                    <strong>🔍 Analysis:</strong> Photographs smuggled out of Ukraine by foreign journalists became crucial evidence. This image shows the human cost of the famine, which Soviet propaganda denied.
+                </div>
+            </div>
+            <div class="grid-item">
+                <img src="https://gis.huri.harvard.edu/sites/default/files/styles/large/public/maps/population_losses_thumb.png" alt="Mortality map">
+                <p class="grid-caption">Excess deaths by raion (Harvard MAPA)</p>
+                <p>Dark red areas show >50% rural losses</p>
+                <div class="grid-detail">
+                    <strong>🔍 Analysis:</strong> The darkest red areas (Poltava, Cherkasy, Kyiv, Kharkiv) lost over half their rural population. This pattern correlates directly with the black soil belt.
+                </div>
+            </div>
+            <div class="grid-item">
+                <img src="https://memorialholodomor.org.ua/sites/default/files/styles/large/public/map-thumb.jpg" alt="Blacklist map">
+                <p class="grid-caption">Blacklisted villages (Chorni doshky)</p>
+                <p>Villages cut off from food supplies</p>
+                <div class="grid-detail">
+                    <strong>🔍 Analysis:</strong> Soviet "Black Lists" publicly named villages that failed to meet grain quotas. These villages were then completely cut off from food – a death sentence.
+                </div>
+            </div>
+            <div class="grid-item">
+                <img src="https://holodomor.ca/wp-content/uploads/2020/04/map-cropped.png" alt="Grain quotas map">
+                <p class="grid-caption">Grain requisition targets (1932)</p>
+                <p>Highest quotas correlate with highest mortality</p>
+                <div class="grid-detail">
+                    <strong>🔍 Analysis:</strong> The highest grain quotas were imposed on the same regions that later suffered the worst mortality. The correlation (r=0.83) is one of the strongest statistical proofs of deliberate policy.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ORIGINAL SPATIAL ANALYSIS CONTENT (unchanged) -->
+    <div class="container">
         <!-- Spatial Hypotheses -->
         <section class="section">
             <h2 class="section-title">Testing the Genocide Hypothesis</h2>
@@ -358,7 +583,7 @@
             </div>
         </section>
 
-        <!-- Visual Highlights (new section) -->
+        <!-- Visual Highlights (original) -->
         <section class="section">
             <h2 class="section-title">Visual Highlights</h2>
             <p>Quick insights into the spatial data behind the hypotheses. Click on any image to explore the full interactive map.</p>
@@ -490,6 +715,31 @@
             </div>
         </section>
 
+        <!-- NEW: Temporal‑Spatial Progression Map (linked to timeline) -->
+        <section class="section">
+            <h2 class="section-title">Temporal‑Spatial Progression: 1931–1934</h2>
+            <div class="timeline-container">
+                <div id="timeline-year">1932</div>
+                <div id="timeline-slider"></div>
+                <div class="timeline-labels"><span>1931</span><span>1932</span><span>1933</span><span>1934</span></div>
+                <div id="timeline-detail" class="timeline-detail">
+                    <h4>1932: Famine begins</h4>
+                    <p>Grain quotas rise to impossible levels; Soviet authorities seal Ukraine's borders; blacklists introduced; first reports of cannibalism in villages.</p>
+                </div>
+                <!-- New map that changes with slider -->
+                <div class="progression-map" style="margin-top: 2rem;">
+                    <div class="map-header">
+                        <h4>Interactive Map: Famine Intensity Over Time</h4>
+                        <p>Use the slider above to see how the famine spread and intensified.</p>
+                    </div>
+                    <div class="map-container" id="progressionMapContainer">
+                        <img id="progressionMapImg" src="https://via.placeholder.com/800x400?text=1931:+Collectivization+begins" alt="Famine progression map">
+                    </div>
+                    <div class="map-note"><strong>Note:</strong> The map above changes as you slide the timeline. For 1931: grain quotas rise; 1932: famine spreads; 1933: peak mortality; 1934: aftermath. (Replace images with actual historical maps for a richer experience.)</div>
+                </div>
+            </div>
+        </section>
+
         <!-- Spin Wheel -->
         <section class="section">
             <h2 class="section-title"><i class="fas fa-cog"></i> Spin to Discover Hidden Facts</h2>
@@ -502,20 +752,6 @@
                     <h3><i class="fas fa-lightbulb"></i> Did you know?</h3>
                     <div id="factDisplay" class="fact-text">Spin the wheel to reveal a fact.</div>
                     <button id="spinWheelBtn" class="spin-btn"><i class="fas fa-sync-alt"></i> SPIN</button>
-                </div>
-            </div>
-        </section>
-
-        <!-- Enhanced Timeline -->
-        <section class="section">
-            <h2 class="section-title">Temporal‑Spatial Progression: 1931–1934</h2>
-            <div class="timeline-container">
-                <div id="timeline-year">1932</div>
-                <div id="timeline-slider"></div>
-                <div class="timeline-labels"><span>1931</span><span>1932</span><span>1933</span><span>1934</span></div>
-                <div id="timeline-detail" class="timeline-detail">
-                    <h4>1932: Famine begins</h4>
-                    <p>Grain quotas rise to impossible levels; Soviet authorities seal Ukraine's borders; blacklists introduced; first reports of cannibalism in villages.</p>
                 </div>
             </div>
         </section>
@@ -533,7 +769,7 @@
                 <li>National Museum of the Holodomor-Genocide. <a href="https://memorialholodomor.org.ua/en" target="_blank">Official Website</a>.</li>
             </ul>
         </section>
-    </main>
+    </div>
 
     <footer class="footer">
         <p>Holodomor Spatial Analysis Project | Created for ArcGIS StoryMaps</p>
@@ -557,10 +793,20 @@
             options: { responsive: true, maintainAspectRatio: false, scales: { x: { title: { display: true, text: 'Grain quota index' } }, y: { title: { display: true, text: 'Mortality (%)' }, beginAtZero: true } } }
         });
 
-        // Timeline
+        // Timeline and dynamic map
         const slider = document.getElementById('timeline-slider');
         const yearDisplay = document.getElementById('timeline-year');
         const detailDiv = document.getElementById('timeline-detail');
+        const progressionImg = document.getElementById('progressionMapImg');
+        
+        // Map images for each year (replace these URLs with actual maps)
+        const yearImages = {
+            1931: "https://via.placeholder.com/800x400?text=1931:+Collectivization+Intensifies",
+            1932: "https://via.placeholder.com/800x400?text=1932:+Famine+Begins",
+            1933: "https://via.placeholder.com/800x400?text=1933:+Peak+Mortality",
+            1934: "https://via.placeholder.com/800x400?text=1934:+Aftermath+and+Denial"
+        };
+        
         noUiSlider.create(slider, {
             start: [1932], connect: [true, false], step: 1,
             range: { min: 1931, max: 1934 },
@@ -577,9 +823,11 @@
             yearDisplay.innerText = year;
             const detail = yearDetails[year];
             detailDiv.innerHTML = `<h4>${detail.title}</h4><p>${detail.text}</p>`;
+            // Update the progression map image
+            progressionImg.src = yearImages[year];
         });
 
-        // Spin Wheel
+        // Spin Wheel (unchanged)
         const wheelCanvas = document.getElementById('wheelCanvas');
         const ctxWheel = wheelCanvas.getContext('2d');
         const spinBtn = document.getElementById('spinWheelBtn');
