@@ -12,6 +12,9 @@
     <!-- noUiSlider for timeline -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.js"></script>
+    <!-- Leaflet for interactive maps -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -332,9 +335,9 @@
             padding: 1rem;
             border-left: 4px solid #b22222;
         }
-        /* New temporal-spatial map */
+        /* Progression map container */
         .progression-map {
-            margin-top: 1rem;
+            margin-top: 2rem;
             background: #f1f5f9;
             border-radius: 16px;
             overflow: hidden;
@@ -346,20 +349,10 @@
             padding: 1rem 1.5rem;
         }
         .progression-map .map-header h4 { font-size: 1.2rem; font-weight: 600; }
-        .progression-map .map-container {
-            height: 400px;
+        .progression-map #progressionMap {
+            height: 500px;
             width: 100%;
             background: #e2e8f0;
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-        }
-        .progression-map .map-container img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
         }
         .data-table {
             width: 100%;
@@ -462,6 +455,7 @@
             .map-grid { grid-template-columns: 1fr; }
             .hero h1 { font-size: 2rem; }
             .wheel-section { flex-direction: column; }
+            .progression-map #progressionMap { height: 300px; }
         }
     </style>
 </head>
@@ -530,7 +524,7 @@
         </div>
     </section>
 
-    <!-- ORIGINAL SPATIAL ANALYSIS CONTENT (unchanged) -->
+    <!-- ORIGINAL SPATIAL ANALYSIS CONTENT -->
     <div class="container">
         <!-- Spatial Hypotheses -->
         <section class="section">
@@ -544,7 +538,7 @@
             </div>
         </section>
 
-        <!-- Enhanced Key Statistics with Links & Icons -->
+        <!-- Enhanced Key Statistics -->
         <section class="section">
             <h2 class="section-title">Key Statistics</h2>
             <div class="stats-row">
@@ -583,7 +577,7 @@
             </div>
         </section>
 
-        <!-- Visual Highlights (original) -->
+        <!-- Visual Highlights -->
         <section class="section">
             <h2 class="section-title">Visual Highlights</h2>
             <p>Quick insights into the spatial data behind the hypotheses. Click on any image to explore the full interactive map.</p>
@@ -628,7 +622,6 @@
             <h2 class="section-title">Spatial Evidence Maps</h2>
             <p style="margin-bottom:1.5rem;">Click any map to open the full interactive version from the authoritative source. These maps allow you to explore the data in detail.</p>
             <div class="map-grid">
-                <!-- Map 1: Mortality -->
                 <div class="map-item">
                     <div class="map-header"><h4>Excess Deaths by Raion (1932–1934)</h4><p>Source: Harvard MAPA Project</p></div>
                     <div class="map-container">
@@ -638,7 +631,6 @@
                     </div>
                     <div class="map-note"><strong>Analysis:</strong> Dark red areas (Poltava, Cherkasy) show >50% rural losses. <a href="https://gis.huri.harvard.edu/population-losses" target="_blank">Open interactive map →</a></div>
                 </div>
-                <!-- Map 2: Grain Quotas -->
                 <div class="map-item">
                     <div class="map-header"><h4>Grain Requisition Targets (1932)</h4><p>Source: Holodomor Research and Education Consortium</p></div>
                     <div class="map-container">
@@ -648,7 +640,6 @@
                     </div>
                     <div class="map-note"><strong>Analysis:</strong> Quota size strongly correlates with mortality (r²=0.78). <a href="https://holodomor.ca/resources/maps/" target="_blank">Explore at HREC →</a></div>
                 </div>
-                <!-- Map 3: Blacklisted Villages -->
                 <div class="map-item">
                     <div class="map-header"><h4>"Black List" Villages (Чорні дошки)</h4><p>Source: Holodomor Museum</p></div>
                     <div class="map-container">
@@ -658,7 +649,6 @@
                     </div>
                     <div class="map-note"><strong>Analysis:</strong> Blacklisted villages cluster in ethnic Ukrainian agricultural regions. <a href="https://memorialholodomor.org.ua/en/map" target="_blank">Open interactive map →</a></div>
                 </div>
-                <!-- Map 4: Oral Histories -->
                 <div class="map-item">
                     <div class="map-header"><h4>Survivor Testimonies by Village</h4><p>Source: Harvard Ukrainian Research Institute</p></div>
                     <div class="map-container">
@@ -686,7 +676,7 @@
             <div style="display: flex; flex-wrap: wrap; gap: 2rem;">
                 <div style="flex: 1 1 300px;">
                     <table class="data-table">
-                        <tr><th>City / Oblast</th><th>Mortality %</th></tr>
+                        麦<th>City / Oblast</th><th>Mortality %</th>麦
                         <tr><td>Poltava</td><td>45–55%</td></tr>
                         <tr><td>Cherkasy</td><td>40–50%</td></tr>
                         <tr><td>Kyiv</td><td>35–45%</td></tr>
@@ -715,7 +705,7 @@
             </div>
         </section>
 
-        <!-- NEW: Temporal‑Spatial Progression Map (linked to timeline) -->
+        <!-- NEW: Temporal‑Spatial Progression Map (Leaflet) -->
         <section class="section">
             <h2 class="section-title">Temporal‑Spatial Progression: 1931–1934</h2>
             <div class="timeline-container">
@@ -726,16 +716,13 @@
                     <h4>1932: Famine begins</h4>
                     <p>Grain quotas rise to impossible levels; Soviet authorities seal Ukraine's borders; blacklists introduced; first reports of cannibalism in villages.</p>
                 </div>
-                <!-- New map that changes with slider -->
-                <div class="progression-map" style="margin-top: 2rem;">
+                <div class="progression-map">
                     <div class="map-header">
                         <h4>Interactive Map: Famine Intensity Over Time</h4>
-                        <p>Use the slider above to see how the famine spread and intensified.</p>
+                        <p>Use the slider above to see how the famine spread. Zoom and pan the map.</p>
                     </div>
-                    <div class="map-container" id="progressionMapContainer">
-                        <img id="progressionMapImg" src="https://via.placeholder.com/800x400?text=1931:+Collectivization+begins" alt="Famine progression map">
-                    </div>
-                    <div class="map-note"><strong>Note:</strong> The map above changes as you slide the timeline. For 1931: grain quotas rise; 1932: famine spreads; 1933: peak mortality; 1934: aftermath. (Replace images with actual historical maps for a richer experience.)</div>
+                    <div id="progressionMap"></div>
+                    <div class="map-note"><strong>Note:</strong> The image overlay changes with the timeline. Replace the placeholder URLs with actual historical maps (e.g., from HURI, HREC, or your own images).</div>
                 </div>
             </div>
         </section>
@@ -793,20 +780,46 @@
             options: { responsive: true, maintainAspectRatio: false, scales: { x: { title: { display: true, text: 'Grain quota index' } }, y: { title: { display: true, text: 'Mortality (%)' }, beginAtZero: true } } }
         });
 
-        // Timeline and dynamic map
+        // Timeline and Leaflet map
         const slider = document.getElementById('timeline-slider');
         const yearDisplay = document.getElementById('timeline-year');
         const detailDiv = document.getElementById('timeline-detail');
-        const progressionImg = document.getElementById('progressionMapImg');
-        
-        // Map images for each year (replace these URLs with actual maps)
+
+        // Map initialization (centered on Ukraine)
+        const map = L.map('progressionMap').setView([49.0, 32.0], 6);
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; CartoDB',
+            subdomains: 'abcd',
+            minZoom: 4,
+            maxZoom: 10
+        }).addTo(map);
+
+        // Image overlays for each year (placeholders – replace with real map URLs)
         const yearImages = {
-            1931: "https://via.placeholder.com/800x400?text=1931:+Collectivization+Intensifies",
-            1932: "https://via.placeholder.com/800x400?text=1932:+Famine+Begins",
-            1933: "https://via.placeholder.com/800x400?text=1933:+Peak+Mortality",
-            1934: "https://via.placeholder.com/800x400?text=1934:+Aftermath+and+Denial"
+            1931: "https://via.placeholder.com/800x600?text=1931:+Collectivization+Intensifies",
+            1932: "https://via.placeholder.com/800x600?text=1932:+Famine+Begins",
+            1933: "https://via.placeholder.com/800x600?text=1933:+Peak+Mortality",
+            1934: "https://via.placeholder.com/800x600?text=1934:+Aftermath+and+Denial"
         };
-        
+
+        let currentOverlay = null;
+
+        // Function to update the image overlay based on year
+        function updateMapOverlay(year) {
+            const imageUrl = yearImages[year];
+            const bounds = [[44.0, 22.0], [52.5, 40.0]]; // approximate bounds of Ukraine
+            if (currentOverlay) {
+                map.removeLayer(currentOverlay);
+            }
+            if (imageUrl) {
+                currentOverlay = L.imageOverlay(imageUrl, bounds, { opacity: 0.7, interactive: true }).addTo(map);
+            }
+        }
+
+        // Set initial overlay for 1932
+        updateMapOverlay(1932);
+
+        // noUiSlider setup
         noUiSlider.create(slider, {
             start: [1932], connect: [true, false], step: 1,
             range: { min: 1931, max: 1934 },
@@ -823,8 +836,7 @@
             yearDisplay.innerText = year;
             const detail = yearDetails[year];
             detailDiv.innerHTML = `<h4>${detail.title}</h4><p>${detail.text}</p>`;
-            // Update the progression map image
-            progressionImg.src = yearImages[year];
+            updateMapOverlay(year);
         });
 
         // Spin Wheel (unchanged)
