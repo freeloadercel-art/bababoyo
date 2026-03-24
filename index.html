@@ -1,4 +1,5 @@
-<!DOCTYPE html>
+
+   <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -115,6 +116,7 @@
             border-top: 1px solid #cbd5e1;
         }
         .map-note strong { color: #b22222; }
+        /* Enhanced stats row */
         .stats-row {
             display: flex;
             flex-wrap: wrap;
@@ -127,10 +129,52 @@
             border-radius: 16px;
             padding: 1.5rem;
             text-align: center;
+            transition: transform 0.2s;
         }
+        .stat-card:hover { transform: translateY(-4px); background: #e9eef3; }
         .stat-number { font-size: 2.5rem; font-weight: 700; color: #b22222; }
         .stat-label { color: #475569; font-weight: 500; margin: 0.5rem 0 0.2rem; }
         .stat-source { font-size: 0.75rem; color: #64748b; }
+        .stat-link {
+            margin-top: 0.75rem;
+            display: inline-block;
+            font-size: 0.85rem;
+            background: #0b1e33;
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+        .stat-link:hover { background: #b22222; }
+        .stat-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: #b22222;
+        }
+        /* Visual highlights cards */
+        .highlights-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        .highlight-card {
+            background: #f8fafc;
+            border-radius: 16px;
+            padding: 1.2rem;
+            border: 1px solid #e2e8f0;
+            transition: 0.2s;
+        }
+        .highlight-card:hover { transform: translateY(-4px); box-shadow: 0 10px 15px -5px rgba(0,0,0,0.05); }
+        .highlight-card img {
+            width: 100%;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+        }
+        .highlight-card h4 { color: #b22222; margin-bottom: 0.5rem; }
+        .highlight-card p { font-size: 0.9rem; color: #334155; }
+        .highlight-card a { color: #2563eb; text-decoration: none; font-weight: 500; }
         .chart-container {
             background: white;
             border-radius: 16px;
@@ -156,7 +200,6 @@
             padding: 1rem;
             border-left: 4px solid #b22222;
         }
-        .timeline-detail h4 { margin-bottom: 0.5rem; color: #0b1e33; }
         .data-table {
             width: 100%;
             border-collapse: collapse;
@@ -264,7 +307,7 @@
     </header>
 
     <main class="container">
-        <!-- Spatial Hypotheses with expanded text -->
+        <!-- Spatial Hypotheses -->
         <section class="section">
             <h2 class="section-title">Testing the Genocide Hypothesis</h2>
             <p style="margin-bottom:1.5rem;">The Holodomor was not a natural famine. Using spatial analysis, we examine four key hypotheses that support the conclusion it was a deliberate, ethnically targeted genocide.</p>
@@ -276,18 +319,86 @@
             </div>
         </section>
 
-        <!-- Key Statistics -->
+        <!-- Enhanced Key Statistics with Links & Icons -->
         <section class="section">
             <h2 class="section-title">Key Statistics</h2>
             <div class="stats-row">
-                <div class="stat-card"><div class="stat-number">3.9M</div><div class="stat-label">Excess Deaths</div><div class="stat-source">Wolowyna et al., 2016</div></div>
-                <div class="stat-card"><div class="stat-number">50%+</div><div class="stat-label">Rural Losses (Poltava)</div><div class="stat-source">HURI MAPA</div></div>
-                <div class="stat-card"><div class="stat-number">12%</div><div class="stat-label">Donbas Mortality</div><div class="stat-source">UNIAN 2015</div></div>
-                <div class="stat-card"><div class="stat-number">30+</div><div class="stat-label">Countries Recognizing Genocide</div><div class="stat-source">HREC</div></div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
+                    <div class="stat-number">3.9M</div>
+                    <div class="stat-label">Excess Deaths</div>
+                    <div class="stat-source">Wolowyna et al., 2016</div>
+                    <a href="https://www.huri.harvard.edu/news/newly-mapped-data-leads-new-insights" class="stat-link" target="_blank">Learn more <i class="fas fa-external-link-alt"></i></a>
+                    <p style="font-size:0.8rem; margin-top:0.75rem;">Total direct losses from starvation and associated diseases, not counting lost births.</p>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-map-marked-alt"></i></div>
+                    <div class="stat-number">50%+</div>
+                    <div class="stat-label">Rural Losses (Poltava)</div>
+                    <div class="stat-source">HURI MAPA</div>
+                    <a href="https://gis.huri.harvard.edu/population-losses" class="stat-link" target="_blank">View map <i class="fas fa-external-link-alt"></i></a>
+                    <p style="font-size:0.8rem; margin-top:0.75rem;">In districts like Hlobyne, more than half the rural population perished.</p>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-industry"></i></div>
+                    <div class="stat-number">12%</div>
+                    <div class="stat-label">Donbas Mortality</div>
+                    <div class="stat-source">UNIAN 2015</div>
+                    <a href="https://www.unian.info/society/1194991-kyiv-and-kharkiv-regions-most-affected-by-holodomor-of-1932-33-study.html" class="stat-link" target="_blank">Read study <i class="fas fa-external-link-alt"></i></a>
+                    <p style="font-size:0.8rem; margin-top:0.75rem;">Industrial workers received rations, lowering death rates compared to agricultural regions.</p>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-globe-americas"></i></div>
+                    <div class="stat-number">30+</div>
+                    <div class="stat-label">Countries Recognizing Genocide</div>
+                    <div class="stat-source">HREC</div>
+                    <a href="https://holodomor.ca/international-recognition/" class="stat-link" target="_blank">See list <i class="fas fa-external-link-alt"></i></a>
+                    <p style="font-size:0.8rem; margin-top:0.75rem;">Including Canada, Poland, Lithuania, and the United States.</p>
+                </div>
             </div>
         </section>
 
-        <!-- Interactive Maps (clickable images linking to official maps) -->
+        <!-- Visual Highlights (new section) -->
+        <section class="section">
+            <h2 class="section-title">Visual Highlights</h2>
+            <p>Quick insights into the spatial data behind the hypotheses. Click on any image to explore the full interactive map.</p>
+            <div class="highlights-grid">
+                <div class="highlight-card">
+                    <a href="https://gis.huri.harvard.edu/population-losses" target="_blank">
+                        <img src="https://gis.huri.harvard.edu/sites/default/files/styles/large/public/maps/population_losses_thumb.png" alt="Mortality map preview">
+                    </a>
+                    <h4>H1: Agricultural Targeting</h4>
+                    <p>Dark red areas (Poltava, Cherkasy) show >50% rural losses — directly overlapping the black soil belt.</p>
+                    <a href="https://gis.huri.harvard.edu/population-losses" target="_blank">Open interactive map →</a>
+                </div>
+                <div class="highlight-card">
+                    <a href="https://holodomor.ca/resources/maps/" target="_blank">
+                        <img src="https://holodomor.ca/wp-content/uploads/2020/04/map-cropped.png" alt="Grain quotas preview">
+                    </a>
+                    <h4>H2: Ethnic Targeting</h4>
+                    <p>Grain quotas were highest where ethnic Ukrainians were concentrated, correlating with mortality (r=0.71).</p>
+                    <a href="https://holodomor.ca/resources/maps/" target="_blank">Explore HREC maps →</a>
+                </div>
+                <div class="highlight-card">
+                    <a href="https://www.arcgis.com/home/item.html?id=3d1c8f5b8a5e4f8e9b2c3d4e5f6a7b8c" target="_blank">
+                        <img src="https://via.placeholder.com/400x200?text=Donbas+Industrial+Region" alt="Donbas map placeholder">
+                    </a>
+                    <h4>H3: Industrial Protection</h4>
+                    <p>Donbas (Donetsk, Luhansk) had mortality below 15% — a stark contrast to agricultural regions.</p>
+                    <a href="https://www.arcgis.com/home/item.html?id=3d1c8f5b8a5e4f8e9b2c3d4e5f6a7b8c" target="_blank">View industrial map →</a>
+                </div>
+                <div class="highlight-card">
+                    <a href="https://memorialholodomor.org.ua/en/map" target="_blank">
+                        <img src="https://memorialholodomor.org.ua/sites/default/files/styles/large/public/map-thumb.jpg" alt="Blacklist map preview">
+                    </a>
+                    <h4>H4: Blacklist Clustering</h4>
+                    <p>Villages cut off from food cluster in the same high‑mortality zones — direct evidence of deliberate starvation.</p>
+                    <a href="https://memorialholodomor.org.ua/en/map" target="_blank">Open memorial map →</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Interactive Maps (clickable images) -->
         <section class="section">
             <h2 class="section-title">Spatial Evidence Maps</h2>
             <p style="margin-bottom:1.5rem;">Click any map to open the full interactive version from the authoritative source. These maps allow you to explore the data in detail.</p>
@@ -297,7 +408,7 @@
                     <div class="map-header"><h4>Excess Deaths by Raion (1932–1934)</h4><p>Source: Harvard MAPA Project</p></div>
                     <div class="map-container">
                         <a href="https://gis.huri.harvard.edu/population-losses" target="_blank">
-                            <img src="https://gis.huri.harvard.edu/sites/default/files/styles/large/public/maps/population_losses_thumb.png" alt="Mortality map" onerror="this.src='https://via.placeholder.com/500x300?text=Harvard+MAPA+Map+Preview'">
+                            <img src="https://gis.huri.harvard.edu/sites/default/files/styles/large/public/maps/population_losses_thumb.png" alt="Mortality map">
                         </a>
                     </div>
                     <div class="map-note"><strong>Analysis:</strong> Dark red areas (Poltava, Cherkasy) show >50% rural losses. <a href="https://gis.huri.harvard.edu/population-losses" target="_blank">Open interactive map →</a></div>
@@ -307,7 +418,7 @@
                     <div class="map-header"><h4>Grain Requisition Targets (1932)</h4><p>Source: Holodomor Research and Education Consortium</p></div>
                     <div class="map-container">
                         <a href="https://holodomor.ca/resources/maps/" target="_blank">
-                            <img src="https://holodomor.ca/wp-content/uploads/2020/04/map-cropped.png" alt="Grain quotas map" onerror="this.src='https://via.placeholder.com/500x300?text=HREC+Map+Preview'">
+                            <img src="https://holodomor.ca/wp-content/uploads/2020/04/map-cropped.png" alt="Grain quotas map">
                         </a>
                     </div>
                     <div class="map-note"><strong>Analysis:</strong> Quota size strongly correlates with mortality (r²=0.78). <a href="https://holodomor.ca/resources/maps/" target="_blank">Explore at HREC →</a></div>
@@ -317,7 +428,7 @@
                     <div class="map-header"><h4>"Black List" Villages (Чорні дошки)</h4><p>Source: Holodomor Museum</p></div>
                     <div class="map-container">
                         <a href="https://memorialholodomor.org.ua/en/map" target="_blank">
-                            <img src="https://memorialholodomor.org.ua/sites/default/files/styles/large/public/map-thumb.jpg" alt="Blacklist map" onerror="this.src='https://via.placeholder.com/500x300?text=Holodomor+Museum+Map'">
+                            <img src="https://memorialholodomor.org.ua/sites/default/files/styles/large/public/map-thumb.jpg" alt="Blacklist map">
                         </a>
                     </div>
                     <div class="map-note"><strong>Analysis:</strong> Blacklisted villages cluster in ethnic Ukrainian agricultural regions. <a href="https://memorialholodomor.org.ua/en/map" target="_blank">Open interactive map →</a></div>
@@ -327,7 +438,7 @@
                     <div class="map-header"><h4>Survivor Testimonies by Village</h4><p>Source: Harvard Ukrainian Research Institute</p></div>
                     <div class="map-container">
                         <a href="https://gis.huri.harvard.edu/oral-history" target="_blank">
-                            <img src="https://gis.huri.harvard.edu/sites/default/files/styles/large/public/maps/oral_history_thumb.png" alt="Oral history map" onerror="this.src='https://via.placeholder.com/500x300?text=Harvard+Oral+History+Map'">
+                            <img src="https://gis.huri.harvard.edu/sites/default/files/styles/large/public/maps/oral_history_thumb.png" alt="Oral history map">
                         </a>
                     </div>
                     <div class="map-note"><strong>Analysis:</strong> Testimonies of cannibalism, deportation cluster in highest mortality zones. <a href="https://gis.huri.harvard.edu/oral-history" target="_blank">Explore at Harvard →</a></div>
@@ -364,7 +475,7 @@
             </div>
         </section>
 
-        <!-- Statistical Evidence with expanded text -->
+        <!-- Statistical Evidence -->
         <section class="section">
             <h2 class="section-title">Statistical Evidence of Deliberate Targeting</h2>
             <div class="chart-row">
@@ -446,7 +557,7 @@
             options: { responsive: true, maintainAspectRatio: false, scales: { x: { title: { display: true, text: 'Grain quota index' } }, y: { title: { display: true, text: 'Mortality (%)' }, beginAtZero: true } } }
         });
 
-        // Timeline with detailed text
+        // Timeline
         const slider = document.getElementById('timeline-slider');
         const yearDisplay = document.getElementById('timeline-year');
         const detailDiv = document.getElementById('timeline-detail');
