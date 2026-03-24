@@ -1,32 +1,63 @@
-<section id="intro" style="position:relative;overflow:hidden;height:100vh;color:white;">
-  <!-- 3D Movable Background -->
-  <div id="bg-layer" style="
-      position:absolute;
-      top:0; left:0;
-      width:120%; height:120%;
-      background-image:url('https://upload.wikimedia.org/wikipedia/commons/4/47/Space_Nebula.jpg');
-      background-size:cover;
-      background-position:center;
-      transform:translate3d(0,0,0);
-      transition:transform 0.1s;
-      z-index:0;
+<!-- Spatial Analysis Section -->
+<section id="spatial-analysis" style="position:relative; min-height:120vh; overflow:hidden;">
+
+  <!-- Fullscreen Background -->
+  <div style="
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background-image:url('https://upload.wikimedia.org/wikipedia/commons/8/8e/Ukraine_black_soil_1933_map.jpg');
+    background-size:cover;
+    background-position:center;
+    z-index:0;
+    filter: brightness(0.5);
   "></div>
 
-  <!-- Content -->
-  <div style="position:relative;z-index:1;max-width:1000px;margin:0 auto;padding:4rem;">
-    <h1 style="font-size:3rem;font-weight:700;margin-bottom:1rem;">The Holodomor: A Spatial Analysis</h1>
-    <p style="font-size:1.2rem;line-height:1.8;">
-      The <strong>Holodomor</strong> (from Ukrainian <em>moryty holodom</em> – "to kill by starvation") was a man-made famine that killed an estimated <strong>3.9 million Ukrainians</strong> in 1932–1933...
+  <!-- Scrollable Content -->
+  <div style="
+    position:relative;
+    z-index:1;
+    max-width:1200px;
+    margin:0 auto;
+    padding:6rem 2rem 4rem 2rem;
+    color:#ffffff;
+  ">
+    <h2 style="font-size:3rem;font-weight:700;margin-bottom:2rem;">Spatial Analysis of the Holodomor</h2>
+
+    <p style="font-size:1.25rem; line-height:1.8; margin-bottom:2rem;">
+      The Holodomor did not affect all regions of Ukraine equally. Using Geographic Information Systems (GIS), researchers have mapped population losses at the district level, revealing stark spatial patterns. The deadliest areas were concentrated in the <strong>fertile black soil belt</strong> of central, eastern, and southern Ukraine—where Soviet grain quotas were harshest and enforcement most brutal.
     </p>
-    <!-- More text here -->
+
+    <!-- Historical Images Row -->
+    <div style="display:flex; flex-wrap:wrap; gap:1rem; margin-bottom:2rem;">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/5/5f/Harvest_in_Ukraine_1933.jpg" alt="Ukrainian Harvest 1933" style="width:48%; border-radius:12px; box-shadow:0 10px 25px rgba(0,0,0,0.4);">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/f/f3/Holodomor_Carpathians_1933.jpg" alt="Holodomor Carpathians 1933" style="width:48%; border-radius:12px; box-shadow:0 10px 25px rgba(0,0,0,0.4);">
+    </div>
+
+    <p style="font-size:1.25rem; line-height:1.8; margin-bottom:2rem;">
+      Northern forested regions (Polissia) experienced lower mortality because they were less integrated into the grain economy. Villages on Soviet "black lists" were deliberately cut off from food, creating clusters of extreme suffering. These patterns demonstrate that the famine was targeted, not random.
+    </p>
+
+    <!-- Another Historical Images Row -->
+    <div style="display:flex; flex-wrap:wrap; gap:1rem; margin-bottom:2rem;">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/0/0b/Chorni_doshky_blacklist_Ukraine.jpg" alt="Black List Village" style="width:48%; border-radius:12px; box-shadow:0 10px 25px rgba(0,0,0,0.4);">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/6/6c/Children_Holodomor_Ukraine.jpg" alt="Children Holodomor" style="width:48%; border-radius:12px; box-shadow:0 10px 25px rgba(0,0,0,0.4);">
+    </div>
+
+    <p style="font-size:1.25rem; line-height:1.8; margin-bottom:2rem;">
+      <strong>Key Takeaways:</strong>
+      <ul style="padding-left:1.5rem; list-style:disc; margin-top:0.5rem;">
+        <li>Mortality highest in grain-producing central and southern regions.</li>
+        <li>Villages on Soviet "black lists" were systematically starved.</li>
+        <li>Industrial regions received more state support and saw lower mortality.</li>
+        <li>GIS mapping confirms the famine was targeted, aligning with historical testimonies.</li>
+      </ul>
+    </p>
+
+    <p style="font-size:1.25rem; line-height:1.8; margin-bottom:2rem;">
+      This spatial evidence helps us understand how geography, policy, and ethnicity combined to create one of the deadliest man-made famines in history.
+    </p>
   </div>
 </section>
-
-<script>
-const bg = document.getElementById('bg-layer');
-document.addEventListener('mousemove', e => {
-    const x = (e.clientX / window.innerWidth - 0.5) * 30; // horizontal movement
-    const y = (e.clientY / window.innerHeight - 0.5) * 30; // vertical movement
-    bg.style.transform = `translate3d(${x}px, ${y}px, 0) scale(1.05)`;
-});
-</script>
