@@ -3,115 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Spin Wheel - Holodomor Facts</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>Holodomor Timeline Map</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.js"></script>
     <style>
-        body { margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f8fafc; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
-        .container { text-align: center; padding: 20px; max-width: 600px; width: 100%; }
-        canvas { display: inline-block; max-width: 100%; height: auto; border-radius: 50%; box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
-        button { background: #b22222; color: white; border: none; padding: 12px 30px; font-size: 1.2rem; border-radius: 50px; cursor: pointer; font-weight: bold; margin: 20px 0; transition: 0.2s; }
-        button:hover { background: #8b1a1a; transform: scale(1.02); }
-        .fact-box { background: #f1f5f9; border-left: 6px solid #b22222; padding: 1rem; border-radius: 8px; margin-top: 20px; font-size: 1rem; }
+        body { margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f8fafc; padding: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; background: white; border-radius: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); overflow: hidden; }
+        .header { background: #1e293b; color: white; padding: 1rem 1.5rem; }
+        .timeline-area { padding: 1.5rem; background: #f1f5f9; }
+        #timeline-slider { margin: 1rem 0; }
+        .timeline-labels { display: flex; justify-content: space-between; margin: 0.5rem 0; font-weight: 500; }
+        #year { font-size: 2rem; font-weight: 700; color: #b22222; text-align: center; margin-bottom: 1rem; }
+        .detail-box { background: white; border-left: 4px solid #b22222; padding: 1rem; margin-top: 1.5rem; border-radius: 8px; }
+        .map-container { height: 500px; width: 100%; background: #e2e8f0; position: relative; }
+        .map-note { padding: 1rem; background: #f8fafc; font-size: 0.9rem; border-top: 1px solid #cbd5e1; }
     </style>
 </head>
 <body>
 <div class="container">
-    <canvas id="wheelCanvas" width="500" height="500"></canvas>
-    <br>
-    <button id="spinBtn"><i class="fas fa-sync-alt"></i> SPIN</button>
-    <div id="factDisplay" class="fact-box"><i class="fas fa-lightbulb"></i> Spin the wheel to reveal a fact.</div>
+    <div class="header"><h4 style="margin:0;">Interactive Map: Famine Intensity Over Time</h4><p style="margin:0; font-size:0.85rem;">Use the slider to see the spread of the Holodomor. Zoom and pan the map.</p></div>
+    <div class="timeline-area">
+        <div id="year">1932</div>
+        <div id="timeline-slider"></div>
+        <div class="timeline-labels"><span>1931</span><span>1932</span><span>1933</span><span>1934</span></div>
+        <div id="detail" class="detail-box">
+            <h4 style="margin:0 0 0.5rem;">1932: Famine begins</h4>
+            <p style="margin:0;">Grain quotas rise; borders sealed; blacklists introduced.</p>
+        </div>
+    </div>
+    <div class="map-container" id="map"></div>
+    <div class="map-note"><strong>Note:</strong> Overlays are from Harvard MAPA. Replace URLs in the script if needed.</div>
 </div>
 <script>
-    const facts = [
-        "The word 'Holodomor' was not used publicly until the 1980s; before that, it was a forbidden topic in the USSR.",
-        "Stalin personally ordered that Ukraine's borders be sealed in December 1932 to prevent peasants from fleeing the famine.",
-        "The number of children who died during the Holodomor is estimated at over 1 million.",
-        "Some villages were so depopulated that the Soviet government erased them from official maps.",
-        "Survivors often had to eat tree bark, grass, cats, and in extreme cases, human flesh to survive.",
-        "The 'Black Lists' (Chorni doshky) were boards posted in villages publicly shaming those who allegedly hid grain; they were cut off from all food supplies.",
-        "Foreign journalists Gareth Jones and Malcolm Muggeridge risked their lives to report on the famine; Western media mocked them as liars.",
-        "The Ukrainian language was suppressed during the famine; speaking Ukrainian could lead to arrest.",
-        "In 2006, Ukraine officially recognized the Holodomor as genocide; Russia still denies it.",
-        "During the Holodomor, the Soviet government exported grain to Europe while Ukrainians starved."
-    ];
+    // Map
+    const map = L.map('map').setView([49.0, 32.0], 6);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; CartoDB',
+        subdomains: 'abcd',
+        minZoom: 4,
+        maxZoom: 10
+    }).addTo(map);
 
-    const canvas = document.getElementById('wheelCanvas');
-    const ctx = canvas.getContext('2d');
-    const spinBtn = document.getElementById('spinBtn');
-    const factDisplay = document.getElementById('factDisplay');
+    const yearImages = {
+        1931: "https://gis.huri.harvard.edu/sites/default/files/maps/collectivization_1931.png",
+        1932: "https://gis.huri.harvard.edu/sites/default/files/maps/famine_begins_1932.png",
+        1933: "https://gis.huri.harvard.edu/sites/default/files/maps/peak_mortality_1933.png",
+        1934: "https://gis.huri.harvard.edu/sites/default/files/maps/aftermath_1934.png"
+    };
+    const fallbackImage = "https://gis.huri.harvard.edu/sites/default/files/styles/large/public/maps/population_losses_thumb.png";
+    let currentOverlay = null;
 
-    const segments = facts.length;
-    const angleStep = (2 * Math.PI) / segments;
-    let currentRotation = 0;
-    let spinning = false;
-
-    function drawWheel() {
-        const size = canvas.width;
-        const center = size / 2;
-        const radius = size / 2;
-        ctx.clearRect(0, 0, size, size);
-        for (let i = 0; i < segments; i++) {
-            const startAngle = i * angleStep + currentRotation;
-            const endAngle = startAngle + angleStep;
-            ctx.beginPath();
-            ctx.moveTo(center, center);
-            ctx.arc(center, center, radius, startAngle, endAngle);
-            ctx.fillStyle = `hsl(${i * 45}, 70%, 55%)`;
-            ctx.fill();
-            ctx.save();
-            ctx.translate(center, center);
-            ctx.rotate(startAngle + angleStep / 2);
-            ctx.textAlign = "center";
-            ctx.textBaseline = "middle";
-            ctx.fillStyle = "white";
-            ctx.font = "bold 16px 'Segoe UI'";
-            ctx.fillText((i+1).toString(), radius * 0.7, 0);
-            ctx.restore();
-            ctx.strokeStyle = "#fff";
-            ctx.lineWidth = 2;
-            ctx.beginPath();
-            ctx.moveTo(center, center);
-            ctx.arc(center, center, radius, startAngle, endAngle);
-            ctx.stroke();
-        }
-        ctx.beginPath();
-        ctx.arc(center, center, 20, 0, 2 * Math.PI);
-        ctx.fillStyle = "#fff";
-        ctx.fill();
-        ctx.strokeStyle = "#b22222";
-        ctx.lineWidth = 3;
-        ctx.stroke();
+    function updateMap(year) {
+        let url = yearImages[year] || fallbackImage;
+        const bounds = [[44.0, 22.0], [52.5, 40.0]];
+        if (currentOverlay) map.removeLayer(currentOverlay);
+        currentOverlay = L.imageOverlay(url, bounds, { opacity: 0.7, interactive: true }).addTo(map);
+        currentOverlay.getElement().onerror = function() {
+            if (currentOverlay) map.removeLayer(currentOverlay);
+            currentOverlay = L.imageOverlay(fallbackImage, bounds, { opacity: 0.7, interactive: true }).addTo(map);
+        };
     }
 
-    function spin() {
-        if (spinning) return;
-        spinning = true;
-        const spinAngle = Math.random() * 360 + 720;
-        const startTime = performance.now();
-        const duration = 2000;
+    const slider = document.getElementById('timeline-slider');
+    const yearSpan = document.getElementById('year');
+    const detailDiv = document.getElementById('detail');
 
-        function animate(now) {
-            const elapsed = now - startTime;
-            const t = Math.min(1, elapsed / duration);
-            const easeOut = 1 - Math.pow(1 - t, 3);
-            const newRot = currentRotation + (spinAngle * Math.PI / 180) * easeOut;
-            currentRotation = newRot % (2 * Math.PI);
-            drawWheel();
-            if (t < 1) {
-                requestAnimationFrame(animate);
-            } else {
-                const pointerAngle = -Math.PI / 2;
-                let rawAngle = (pointerAngle - currentRotation + 2 * Math.PI) % (2 * Math.PI);
-                let segmentIndex = Math.floor(rawAngle / angleStep) % segments;
-                factDisplay.innerHTML = `<i class="fas fa-lightbulb"></i> ${facts[segmentIndex]}`;
-                spinning = false;
-            }
-        }
-        requestAnimationFrame(animate);
-    }
+    noUiSlider.create(slider, {
+        start: [1932], connect: [true, false], step: 1,
+        range: { min: 1931, max: 1934 },
+        format: { to: v => Math.round(v), from: v => Math.round(v) }
+    });
 
-    spinBtn.addEventListener('click', spin);
-    drawWheel();
+    const details = {
+        1931: { title: "1931: Collectivization intensifies", text: "Grain quotas rise sharply. Peasants who resist are labeled 'kulaks' and deported. Hundreds of thousands are sent to Siberia in cattle cars. Signs of impending famine appear." },
+        1932: { title: "1932: Famine begins", text: "By spring, starvation spreads. In August, Stalin's 'Law of Five Ears' makes grain theft a capital offense. December: Ukraine's borders are sealed; blacklists (Chorni doshky) are posted, cutting off villages from food." },
+        1933: { title: "1933: Peak mortality", text: "Apocalyptic conditions: cannibalism, corpses in streets. Foreign journalists Gareth Jones and Malcolm Muggeridge expose the famine but are mocked by Western media. Soviet press denies any famine." },
+        1934: { title: "1934: Famine subsides", text: "The worst is over, but millions have died. The Soviet regime continues to suppress information. Villages that were erased from maps never recover." }
+    };
+
+    slider.noUiSlider.on('update', (values) => {
+        const year = values[0];
+        yearSpan.innerText = year;
+        const d = details[year];
+        detailDiv.innerHTML = `<h4 style="margin:0 0 0.5rem;">${d.title}</h4><p style="margin:0;">${d.text}</p>`;
+        updateMap(year);
+    });
+
+    updateMap(1932);
 </script>
 </body>
 </html>
